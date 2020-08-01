@@ -10,6 +10,10 @@
 
 ![alt text](https://github.com/dominicfernando/itegration/blob/master/screenshot/image3.png?raw=true)
 
+# Customer Order detail page(My Account -> My Orders)
+
+![alt text](https://github.com/dominicfernando/itegration/blob/master/screenshot/image5.png?raw=true)
+
 # Admin order detail page
 
 ![alt text](https://github.com/dominicfernando/itegration/blob/master/screenshot/image4.png?raw=true)
