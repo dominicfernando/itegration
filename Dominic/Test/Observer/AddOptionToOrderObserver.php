@@ -39,15 +39,16 @@ class AddOptionToOrderObserver implements ObserverInterface
         /** @var $orderInstance Order */
         $order = $observer->getOrder();
         $quoteItems = $this->getQuoteItemDetails($quote);
-
         foreach ($order->getAllVisibleItems() as $orderItem) {
             $quoteItem = $quoteItems[$orderItem->getQuoteItemId()];
             $additionalOptions = $quoteItem->getOptionByCode('additional_options');
-            $optionDetails = $additionalOptions->getValue();
-            if (!empty($optionDetails)) {
-                $options = $orderItem->getProductOptions();
-                $options['additional_options'] = $this->serializer->unserialize($optionDetails);
-                $orderItem->setProductOptions($options);
+            if ($additionalOptions !== null) {
+                $optionDetails = $additionalOptions->getValue();
+                if (!empty($optionDetails)) {
+                    $options = $orderItem->getProductOptions();
+                    $options['additional_options'] = $this->serializer->unserialize($optionDetails);
+                    $orderItem->setProductOptions($options);
+                }
             }
         }
 

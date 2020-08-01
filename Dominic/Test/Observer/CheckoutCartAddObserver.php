@@ -1,6 +1,7 @@
 <?php
 namespace Dominic\Test\Observer;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -31,33 +32,36 @@ class CheckoutCartAddObserver implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         $item = $observer->getQuoteItem();
-        $product = $item->getProduct();
-        $additionalOptions = [];
-        if ($additionalOption = $item->getOptionByCode('additional_options')) {
-            $additionalOptions = $this->serializer->unserialize($additionalOption->getValue());
-        }
 
-        $additionalOptions[] = [
-            'label' => __('Vendor Name'),
-            'value' => $product->getVendorName()
-        ];
+        if ($item->getProductType() == Type::TYPE_VIRTUAL) {
+            $product = $item->getProduct();
+            $additionalOptions = [];
+            if ($additionalOption = $item->getOptionByCode('additional_options')) {
+                $additionalOptions = $this->serializer->unserialize($additionalOption->getValue());
+            }
 
-        $additionalOptions[] = [
-            'label' => __('Vendor Phone number'),
-            'value' => $product->getVendorMob()
-        ];
+            $additionalOptions[] = [
+                'label' => __('Vendor Name'),
+                'value' => $product->getVendorName()
+            ];
 
-        $additionalOptions[] = [
-            'label' => __('Vendor City'),
-            'value' => $product->getVendorCity()
-        ];
+            $additionalOptions[] = [
+                'label' => __('Vendor Phone number'),
+                'value' => $product->getVendorMob()
+            ];
 
-        if (count($additionalOptions) > 0) {
-            $item->addOption([
-                'product_id' => $item->getProductId(),
-                'code' => 'additional_options',
-                'value' => $this->serializer->serialize($additionalOptions)
-            ]);
+            $additionalOptions[] = [
+                'label' => __('Vendor City'),
+                'value' => $product->getVendorCity()
+            ];
+
+            if (count($additionalOptions) > 0) {
+                $item->addOption([
+                    'product_id' => $item->getProductId(),
+                    'code' => 'additional_options',
+                    'value' => $this->serializer->serialize($additionalOptions)
+                ]);
+            }
         }
     }
 }
